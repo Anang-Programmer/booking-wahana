@@ -1,0 +1,575 @@
+{% extends 'admin/layout.html' %}
+{% block title %}{{ form_title }}{% endblock %}
+
+{% block content %}
+<style>
+:root {
+    --primary-color: #007bff;
+    --primary-dark: #0056b3;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --info-color: #17a2b8;
+    --warning-color: #ffc107;
+    --bg-light: #f8f9fa;
+    --text-dark: #343a40;
+    --white: #ffffff;
+    --border-color: #dee2e6;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-title {
+    color: var(--white) !important;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.form-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    max-width: 800px;
+    margin-top: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background: var(--white);
+    color: var(--text-dark);
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-control-file {
+    padding: 0.5rem;
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-light);
+}
+
+.form-control-file:hover {
+    border-color: var(--primary-color);
+    background: rgba(0, 123, 255, 0.05);
+}
+
+.image-preview {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: var(--bg-light);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.image-preview img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-dark), #004085);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    color: var(--white);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, var(--warning-color), #e0a800);
+    color: var(--text-dark);
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #e0a800, #d39e00);
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+    color: var(--text-dark);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--error-color), #c82333);
+    color: var(--white);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #c82333, #a71e2a);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    color: var(--white);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, var(--secondary-color), #5a6268);
+    color: var(--white);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #5a6268, #495057);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+    color: var(--white);
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+}
+
+.card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-top: 3rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.card h2, .card h3 {
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+}
+
+.data-table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.data-table thead {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+}
+
+.data-table thead th {
+    color: var(--white);
+    font-weight: 600;
+    text-align: left;
+    padding: 1rem 0.75rem;
+    border: none;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.data-table tbody tr {
+    background: var(--white);
+    transition: all 0.3s ease;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table tbody tr:hover {
+    background: var(--bg-light);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.data-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.data-table td {
+    padding: 1rem 0.75rem;
+    color: var(--text-dark);
+    vertical-align: middle;
+    border: none;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.delete-form {
+    margin: 0;
+    display: inline-block;
+}
+
+.form-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    align-items: flex-end;
+    margin-top: 1.5rem;
+}
+
+.form-inline .form-group {
+    margin-bottom: 0;
+}
+
+.flex-item {
+    flex: 1 1 220px;
+    min-width: 160px;
+}
+
+.flex-item-small {
+    flex: 1 1 160px;
+    min-width: 120px;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-dialog {
+    background: var(--white);
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-content {
+    padding: 0;
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    margin: 0;
+    color: var(--text-dark);
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--secondary-color);
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-close:hover {
+    color: var(--text-dark);
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-body .form-group {
+    margin-bottom: 1rem;
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-title {
+        font-size: 1.5rem;
+    }
+    
+    .form-card,
+    .card {
+        padding: 1.5rem;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+    
+    .form-inline {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .flex-item,
+    .flex-item-small {
+        flex: 1 1 100%;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .action-buttons .btn {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .data-table thead th,
+    .data-table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* Back Button */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--white);
+    color: var(--primary-color);
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    border: 2px solid var(--primary-color);
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+}
+
+.btn-back:hover {
+    background: var(--primary-color);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.2);
+}
+
+.mt-2 {
+    margin-top: 0.5rem;
+}
+</style>
+<a href="{{ url_for('admin_kelola_wahana') }}" class="btn-back">← Kembali ke Daftar Wahana</a>
+<div style="max-width: 900px; margin: 0 auto;">
+    <h1 class="dashboard-title">{{ form_title }}</h1>
+
+    <form method="POST" enctype="multipart/form-data" class="form-card">
+        <div class="form-group">
+            <label for="nama_wahana">Nama Wahana</label>
+            <input type="text" name="nama_wahana" value="{{ wahana.nama_wahana if wahana else '' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="deskripsi">Deskripsi</label>
+            <textarea name="deskripsi" rows="4">{{ wahana.deskripsi if wahana else '' }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="lokasi">Lokasi</label>
+            <input type="text" name="lokasi" value="{{ wahana.lokasi if wahana else '' }}">
+        </div>
+        <div class="form-group">
+            <label for="kapasitas">Kapasitas</label>
+            <input type="number" name="kapasitas" value="{{ wahana.kapasitas if wahana else '' }}">
+        </div>
+        <div class="form-group">
+            <label for="gambar_file">Upload Gambar Wahana</label>
+            {% if wahana and wahana.gambar_url %}
+                <div class="image-preview">
+                    <p style="margin-bottom: 0.5rem; font-weight: 600;">Gambar saat ini:</p>
+                    <img src="{{ url_for('static', filename='images/' + wahana.gambar_url) }}" alt="Preview">
+                </div>
+            {% endif %}
+            <input type="file" name="gambar_file" class="form-control-file">
+            <small style="color: var(--secondary-color); margin-top: 0.5rem; display: block;">Kosongkan jika tidak ingin mengganti gambar.</small>
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Simpan Perubahan</button>
+    </form>
+
+    {% if wahana %}
+    <div class="card">
+        <h2 style="text-align: center;">Manajemen Jadwal untuk {{ wahana.nama_wahana }}</h2>
+
+        <!-- Tabel jadwal -->
+        <div style="overflow-x: auto; margin-top: 1rem;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Waktu Mulai</th>
+                        <th>Waktu Selesai</th>
+                        <th>Sisa Tiket</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for jadwal in wahana.jadwals %}
+                    <tr>
+                        <td>{{ jadwal.waktu_mulai.strftime('%d %b %Y, %H:%M') }}</td>
+                        <td>{{ jadwal.waktu_selesai.strftime('%H:%M') }}</td>
+                        <td><strong>{{ jadwal.sisa_tiket }}</strong> tiket</td>
+                        <td>
+                            <div class="action-buttons">
+                                <!-- Button Edit -->
+                                <button type="button" class="btn btn-warning btn-sm" onclick="openModal('modalEdit{{ jadwal.id }}')">
+                                    Edit
+                                </button>
+
+                                <!-- Button Hapus -->
+                                <form action="{{ url_for('admin_hapus_jadwal', id=jadwal.id) }}" method="POST" onsubmit="return confirm('Yakin hapus jadwal ini?');" class="delete-form">
+                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Modal Edit Jadwal -->
+                    <div class="modal" id="modalEdit{{ jadwal.id }}">
+                        <div class="modal-dialog">
+                            <form action="{{ url_for('admin_edit_jadwal', id=jadwal.id) }}" method="POST">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Edit Jadwal</h5>
+                                        <button type="button" class="btn-close" onclick="closeModal('modalEdit{{ jadwal.id }}')">&times;</button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label>Waktu Mulai</label>
+                                            <input type="datetime-local" name="waktu_mulai" required value="{{ jadwal.waktu_mulai.strftime('%Y-%m-%dT%H:%M') }}">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Waktu Selesai</label>
+                                            <input type="datetime-local" name="waktu_selesai" required value="{{ jadwal.waktu_selesai.strftime('%Y-%m-%dT%H:%M') }}">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Sisa Tiket</label>
+                                            <input type="number" name="sisa_tiket" required min="0" value="{{ jadwal.sisa_tiket }}">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" onclick="closeModal('modalEdit{{ jadwal.id }}')">Batal</button>
+                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 2rem; color: var(--secondary-color);">
+                            <strong>Belum ada jadwal untuk wahana ini.</strong>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <hr style="margin: 2rem 0; border: none; height: 1px; background: var(--border-color);">
+
+        <!-- Form tambah jadwal -->
+        <h3 style="text-align: center;">Tambah Jadwal Baru</h3>
+        <form action="{{ url_for('admin_tambah_jadwal', id_wahana=wahana.id) }}" method="POST" class="form-inline">
+            <div class="form-group flex-item">
+                <label>Waktu Mulai</label>
+                <input type="datetime-local" name="waktu_mulai" required>
+            </div>
+            <div class="form-group flex-item">
+                <label>Waktu Selesai</label>
+                <input type="datetime-local" name="waktu_selesai" required>
+            </div>
+            <div class="form-group flex-item-small">
+                <label>Sisa Tiket</label>
+                <input type="number" name="sisa_tiket" required min="1">
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">+ Tambah</button>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function openModal(modalId) {
+    document.getElementById(modalId).classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('show');
+    document.body.style.overflow = 'auto';
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.classList.remove('show');
+        document.body.style.overflow = 'auto';
+    }
+});
+</script>
+{% endblock %}

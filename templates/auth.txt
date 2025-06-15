@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+{% block title %}Login atau Registrasi{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <!-- Form Login -->
+    <div class="form-card">
+        <h2>Login</h2>
+        <form action="{{ url_for('auth') }}" method="POST">
+            <div class="form-group">
+                <label for="login_email">Email</label>
+                <input type="email" id="login_email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="login_password">Password</label>
+                <input type="password" id="login_password" name="password" required>
+            </div>
+            <button type="submit" name="login" class="btn">Login</button>
+        </form>
+    </div>
+
+    <!-- Form Registrasi -->
+    <div class="form-card">
+        <h2>Registrasi Akun Baru</h2>
+        <form action="{{ url_for('auth') }}" method="POST">
+            <div class="form-group">
+                <label for="reg_nama">Nama Lengkap</label>
+                <input type="text" id="reg_nama" name="nama" required>
+            </div>
+            <div class="form-group">
+                <label for="reg_email">Email</label>
+                <input type="email" id="reg_email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="reg_password">Password</label>
+                <input type="password" id="reg_password" name="password" required>
+            </div>
+            <button type="submit" name="register" class="btn btn-secondary">Registrasi</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,474 @@
+{% extends 'admin/layout.html' %}
+{% block title %}Dashboard Admin{% endblock %}
+
+{% block content %}
+<h1 class="dashboard-title">Dashboard Admin</h1>
+<p class="welcome-message">Selamat datang kembali, Admin! Semoga harimu menyenangkan.</p>
+
+<!-- Stats Cards (Original) -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>{{ total_wahana }}</h3>
+        <p>Total Wahana</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ total_pengguna }}</h3>
+        <p>Total Pengguna</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ total_booking }}</h3>
+        <p>Total Booking</p>
+    </div>
+</div>
+
+<!-- Charts Section (New) -->
+<div class="charts-section">
+    <!-- Summary Chart -->
+    <div class="chart-container">
+        <div class="chart-header">
+            <h3>Ringkasan Data</h3>
+            <p>Overview statistik keseluruhan sistem</p>
+        </div>
+        <canvas id="summaryChart"></canvas>
+    </div>
+
+    <!-- Dual Charts Row -->
+    <div class="charts-row">
+        <!-- Doughnut Chart -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3>Distribusi Data</h3>
+                <p>Perbandingan data dalam sistem</p>
+            </div>
+            <canvas id="distributionChart"></canvas>
+        </div>
+
+        <!-- Line Chart -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3>Trend Pertumbuhan</h3>
+                <p>Simulasi trend bulanan</p>
+            </div>
+            <canvas id="trendChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Charts Section Styling */
+    .charts-section {
+        margin-top: 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .charts-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+
+    .chart-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .chart-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #667eea, transparent);
+        transition: left 0.6s ease;
+    }
+
+    .chart-container:hover::before {
+        left: 100%;
+    }
+
+    .chart-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    }
+
+    .chart-header {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .chart-header h3 {
+        color: #333;
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 5px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .chart-header p {
+        color: #666;
+        font-size: 14px;
+        opacity: 0.8;
+    }
+
+    /* Canvas Styling */
+    canvas {
+        max-height: 400px !important;
+        border-radius: 10px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .charts-row {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .chart-container {
+            padding: 20px;
+        }
+
+        .chart-header h3 {
+            font-size: 18px;
+        }
+
+        canvas {
+            max-height: 300px !important;
+        }
+    }
+
+    /* Loading Animation */
+    .chart-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+        color: #667eea;
+        font-size: 16px;
+    }
+
+    .chart-loading::after {
+        content: '';
+        width: 20px;
+        height: 20px;
+        border: 2px solid #667eea;
+        border-top: 2px solid transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-left: 10px;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Ambil data dari template variables
+    const totalWahana = {{ total_wahana }};
+    const totalPengguna = {{ total_pengguna }};
+    const totalBooking = {{ total_booking }};
+
+    // Chart Colors
+    const colors = {
+        primary: '#667eea',
+        secondary: '#764ba2',
+        success: '#48bb78',
+        warning: '#ed8936',
+        info: '#4299e1',
+        light: '#f7fafc',
+        gradients: {
+            blue: ['#667eea', '#764ba2'],
+            green: ['#48bb78', '#38a169'],
+            orange: ['#ed8936', '#dd6b20'],
+            purple: ['#9f7aea', '#805ad5']
+        }
+    };
+
+    // 1. Summary Bar Chart
+    const summaryCtx = document.getElementById('summaryChart').getContext('2d');
+    new Chart(summaryCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Wahana', 'Pengguna', 'Booking'],
+            datasets: [{
+                label: 'Total',
+                data: [totalWahana, totalPengguna, totalBooking],
+                backgroundColor: [
+                    'rgba(102, 126, 234, 0.8)',
+                    'rgba(118, 75, 162, 0.8)',
+                    'rgba(72, 187, 120, 0.8)'
+                ],
+                borderColor: [
+                    colors.primary,
+                    colors.secondary,
+                    colors.success
+                ],
+                borderWidth: 2,
+                borderRadius: 10,
+                borderSkipped: false,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: 'white',
+                    bodyColor: 'white',
+                    borderColor: colors.primary,
+                    borderWidth: 1,
+                    cornerRadius: 8,
+                    displayColors: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: '#666',
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#666',
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        }
+                    }
+                }
+            },
+            animation: {
+                duration: 1500,
+                easing: 'easeOutQuart'
+            }
+        }
+    });
+
+    // 2. Distribution Doughnut Chart
+    const distributionCtx = document.getElementById('distributionChart').getContext('2d');
+    new Chart(distributionCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Wahana', 'Pengguna', 'Booking'],
+            datasets: [{
+                data: [totalWahana, totalPengguna, totalBooking],
+                backgroundColor: [
+                    'rgba(102, 126, 234, 0.8)',
+                    'rgba(118, 75, 162, 0.8)',
+                    'rgba(72, 187, 120, 0.8)'
+                ],
+                borderColor: [
+                    colors.primary,
+                    colors.secondary,
+                    colors.success
+                ],
+                borderWidth: 3,
+                hoverOffset: 15
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: 'white',
+                    bodyColor: 'white',
+                    borderColor: colors.primary,
+                    borderWidth: 1,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: function (context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((context.parsed * 100) / total).toFixed(1);
+                            return `${context.label}: ${context.parsed} (${percentage}%)`;
+                        }
+                    }
+                }
+            },
+            animation: {
+                animateRotate: true,
+                animateScale: true,
+                duration: 1500
+            }
+        }
+    });
+
+    // 3. Trend Line Chart (Simulated monthly growth)
+    const trendCtx = document.getElementById('trendChart').getContext('2d');
+
+    // Generate simulated monthly data based on current totals
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    const wahanaData = [];
+    const penggunaData = [];
+    const bookingData = [];
+
+    // Create growth simulation
+    for (let i = 0; i < months.length; i++) {
+        const growthFactor = (i + 1) / months.length;
+        wahanaData.push(Math.round(totalWahana * growthFactor));
+        penggunaData.push(Math.round(totalPengguna * growthFactor));
+        bookingData.push(Math.round(totalBooking * growthFactor));
+    }
+
+    new Chart(trendCtx, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [
+                {
+                    label: 'Wahana',
+                    data: wahanaData,
+                    borderColor: colors.primary,
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: colors.primary,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                },
+                {
+                    label: 'Pengguna',
+                    data: penggunaData,
+                    borderColor: colors.secondary,
+                    backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: colors.secondary,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                },
+                {
+                    label: 'Booking',
+                    data: bookingData,
+                    borderColor: colors.success,
+                    backgroundColor: 'rgba(72, 187, 120, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: colors.success,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: 'white',
+                    bodyColor: 'white',
+                    borderColor: colors.primary,
+                    borderWidth: 1,
+                    cornerRadius: 8
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: '#666',
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#666',
+                        font: {
+                            size: 12
+                        }
+                    }
+                }
+            },
+            animation: {
+                duration: 2000,
+                easing: 'easeOutQuart'
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

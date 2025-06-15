@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block title %}Daftar Tunggu Saya{% endblock %}
+
+{% block content %}
+<div class="container">
+    <a href="{{ url_for('halaman_utama') }}" class="btn-back">&larr; Kembali ke Beranda</a>
+    <h1 style="color: white;">Daftar Tunggu Saya</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="notification {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% if daftar_tunggu %}
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Wahana</th>
+                    <th>Jadwal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in daftar_tunggu %}
+                <tr>
+                    <td data-label="Wahana">{{ item.jadwal.wahana.nama_wahana }}</td>
+                    <td data-label="Jadwal">{{ item.jadwal.waktu_mulai.strftime('%d %b %Y, %H:%M') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="notification info">Anda tidak sedang berada di dalam daftar tunggu manapun.</div>
+    {% endif %}
+</div>
+{% endblock %}

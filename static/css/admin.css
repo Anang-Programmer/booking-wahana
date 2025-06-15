@@ -1,0 +1,788 @@
+:root {
+    --primary-color: #007bff;
+    --primary-dark: #0056b3;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --info-color: #17a2b8;
+    --bg-light: #f8f9fa;
+    --text-dark: #343a40;
+    --white: #ffffff;
+    --border-color: #dee2e6;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+.admin-header {
+    background-color: var(--white);
+    box-shadow: var(--shadow);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+.admin-header .logo {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+nav {
+    display: flex;
+    gap: 1.5rem;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+nav a:hover {
+    color: var(--primary-color);
+}
+
+.menu-toggle {
+    display: none;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+h1{
+    color: white !important;
+}
+@media (max-width: 768px) {
+    nav {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        margin-top: 1rem;
+        align-items: center; /* Menengahkan isi nav */
+        text-align: center;   /* Menengahkan teks dalam nav */
+    }
+
+    nav.active {
+        display: flex;
+    }
+
+    .menu-toggle,
+    .hamburger-menu {
+        display: block;
+        color: var(--primary-color);
+    }
+
+    nav a,
+    .nav-user,
+    .btn-login,
+    .btn-logout,
+    .btn-regis {
+        padding: 0.75rem 0;
+        width: 100%;
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    nav a:hover {
+            color: rgb(144, 0, 255);
+        }
+
+    .nav-user {
+        font-weight: 500;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .form-card {
+        padding: 1rem;
+    }
+
+    .card,
+    .data-table {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    h1 {
+        font-size: 1.4rem;
+        color: white !important;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+        color: var(--primary-color);
+    }
+
+    .data-table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+
+.admin-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.notification {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: #e1f3ff;
+    border: 1px solid #8cc8ff;
+    border-radius: 5px;
+    color: #0b3d91;
+}
+
+main {
+    padding: 2rem 0;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.dashboard-title {
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.5rem;
+    color: white;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    animation: fadeInDown 0.8s ease-in-out;
+}
+
+.welcome-message {
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.2rem;
+    color: white;
+    margin-bottom: 2rem;
+    animation: fadeIn 1.2s ease-in;
+}
+
+/* Animasi masuk */
+@keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* === DASHBOARD STAT CARDS === */
+.stats-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+    padding: 0 2rem;
+}
+
+.stat-card {
+    background-color: #f5f7ff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.30);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    width: 240px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid var(--border-color);
+}
+
+.stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.40);
+    background-color: #cdd3ee;
+}
+
+.stat-card h3 {
+    font-size: 2.5rem;
+    margin: 0;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.stat-card p {
+    margin-top: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: black;
+}
+
+.wahana-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
+.wahana-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.wahana-card {
+    background-color: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.wahana-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.tag-status-selesai {
+    background-color: #28a745;
+    color: #fff;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+.tag-status-dibatalkan {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+.card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.card-image {
+    width: 100%;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+}
+
+.card-content {
+    padding: 1.5rem;
+}
+
+.card-content h2 {
+    margin-top: 0;
+    color: var(--primary-color);
+}
+
+.data-table {
+    background-color: white;
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+    overflow-x: auto;
+}
+
+.data-table th,
+.data-table td {
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+.data-table thead {
+    background-color: #f8f9fa;
+}
+
+.data-table tr:hover {
+    /* background-color: #f1f5f9; */
+    cursor: pointer;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    border-radius: 4px;
+}
+
+.btn {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+}
+
+.btn-card {
+    display: inline-block;
+    margin-top: 1rem;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.btn-back {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.detail-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
+
+.detail-container img {
+    max-width: 100%;
+    width: 400px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.detail-info {
+    flex: 1;
+    min-width: 300px;
+}
+
+.booking-section {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.notification {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    color: #fff;
+    text-align: center;
+}
+
+.notification.success {
+    background-color: var(--success-color);
+}
+
+.notification.error {
+    background-color: var(--error-color);
+}
+
+.notification.info {
+    background-color: var(--info-color);
+}
+
+.auth-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.form-card {
+    max-width: 600px;
+    margin: 0 auto;
+    /* Tengahkan seluruh form */
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    box-shadow: var(--shadow);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.history-table th,
+.history-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.history-table th {
+    background-color: var(--bg-light);
+}
+
+.waiting-list-section {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.waiting-list-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.waiting-list-item:last-child {
+    border-bottom: none;
+}
+
+footer {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.5rem 0;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 3rem;
+}
+
+/* Tambahkan di akhir file style.css */
+.tag-role-admin {
+    background-color: #e0e7ff;
+    color: #4338ca;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+.tag-role-user {
+    background-color: #f3f4f6;
+    color: #4b5563;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+.tag-status-lunas {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.tag-status-aktif {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+/* Styling untuk preview gambar di form admin */
+.image-preview {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: var(--light-gray);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    display: inline-block;
+}
+
+.image-preview p {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.image-preview img {
+    max-width: 200px;
+    height: auto;
+    border-radius: 4px;
+}
+
+.form-control-file {
+    display: block;
+    margin-top: 0.5rem;
+}
+
+/* ... (semua CSS lama) ... */
+
+/* ... (semua CSS lama) ... */
+
+/* Styling untuk halaman tiket */
+.ticket-page-body {
+    background-color: #e9ecef;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.ticket-wrapper {
+    width: 100%;
+    max-width: 450px;
+}
+
+.ticket-container {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.ticket-header {
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.ticket-header h2 {
+    margin: 0;
+    color: white;
+}
+
+.ticket-header p {
+    margin: 0.25rem 0 0;
+    opacity: 0.8;
+}
+
+.ticket-content {
+    padding: 2rem;
+}
+
+.ticket-content h3 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.detail-item span {
+    color: var(--secondary-color);
+}
+
+.detail-item strong {
+    font-weight: 600;
+}
+
+.tag-status-aktif,
+.tag-status-digunakan,
+.tag-status-batal {
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.tag-status-aktif {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.tag-status-digunakan {
+    background-color: #e5e7eb;
+    color: #4b5563;
+}
+
+.tag-status-batal {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.ticket-qr {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.booking-code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.2rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-top: 0.5rem;
+    background: var(--bg-light);
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.ticket-footer {
+    background: var(--bg-light);
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+.print-actions {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.ticket-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+}
+
+.ticket-entry .btn-sm {
+    padding: 2px 8px;
+    font-size: 0.75rem;
+}
+
+/* === @MEDIA PRINT YANG DIPERBARUI TOTAL === */
+@media print {
+
+    /* Paksa browser untuk mencetak semua warna latar belakang */
+    body {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+    /* Sembunyikan semua elemen di halaman secara default */
+    body * {
+        visibility: hidden;
+    }
+
+    /* Tampilkan HANYA .ticket-wrapper dan semua elemen di dalamnya */
+    .ticket-wrapper,
+    .ticket-wrapper * {
+        visibility: visible;
+    }
+
+    /* Reset layout body untuk cetak */
+    .ticket-page-body {
+        padding: 0;
+        margin: 0;
+        background-color: white;
+        /* Pastikan latar belakang kertas putih */
+    }
+
+    /* Posisikan wrapper tiket di tengah halaman cetak */
+    .ticket-wrapper {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100vh;
+        /* Gunakan tinggi viewport untuk centering vertikal */
+        max-width: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1cm;
+        /* Beri sedikit padding dari tepi kertas */
+    }
+
+    .ticket-container {
+        /* FIX: Hapus width: 90% dan gunakan max-width yang lebih proporsional */
+        width: 100%;
+        max-width: 450px;
+        /* Atur lebar maksimal tiket agar tidak 'gendut' */
+        margin: 0;
+        box-shadow: none;
+        border: 2px solid #000;
+        page-break-inside: avoid;
+    }
+
+    /* Sembunyikan tombol aksi saat mencetak */
+    .print-actions {
+        display: none;
+    }
+
+    /* Pastikan header tiket tercetak dengan benar */
+    .ticket-header {
+        background-color: var(--primary-color) !important;
+        color: var(--white) !important;
+    }
+
+    .ticket-header h2,
+    .ticket-header p {
+        color: var(--white) !important;
+    }
+
+    /* Pastikan tag status juga tercetak warnanya dengan benar */
+    .tag-status-aktif {
+        background-color: #d1fae5 !important;
+        color: #065f46 !important;
+    }
+}
+

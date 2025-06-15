@@ -1,0 +1,326 @@
+{% extends 'admin/layout.html' %}
+{% block title %}Detail Pemesanan {{ pemesanan.id }}{% endblock %}
+
+{% block content %}
+<style>
+:root {
+    --primary-color: #007bff;
+    --primary-dark: #0056b3;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --info-color: #17a2b8;
+    --bg-light: #f8f9fa;
+    --text-dark: #343a40;
+    --white: #ffffff;
+    --border-color: #dee2e6;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Back Button */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--white);
+    color: var(--primary-color);
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    border: 2px solid var(--primary-color);
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+}
+
+.btn-back:hover {
+    background: var(--primary-color);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.2);
+}
+
+/* Dashboard Title */
+.dashboard-title {
+    color: var(--white);
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Card Styling */
+.card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.card p {
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--text-dark);
+}
+
+.card p:last-child {
+    margin-bottom: 0;
+}
+
+.card strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Section Title */
+h3 {
+    color: var(--white) !important;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 30px 0 20px 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Table Container */
+.table-container {
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+/* Data Table */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.data-table thead {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+}
+
+.data-table thead th {
+    color: var(--white);
+    font-weight: 600;
+    padding: 18px 15px;
+    text-align: left;
+    letter-spacing: 0.5px;
+    border: none;
+    white-space: nowrap;
+}
+
+.data-table tbody tr {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+    transform: scale(1.01);
+}
+
+.data-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.data-table tbody td {
+    padding: 15px;
+    color: var(--text-dark);
+    vertical-align: middle;
+    border: none;
+}
+
+.data-table tbody td strong {
+    color: var(--primary-color);
+    font-family: 'Courier New', monospace;
+    background: rgba(0, 123, 255, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+/* Status Tags */
+.tag-status-digunakan {
+    background: linear-gradient(135deg, var(--success-color), #20c997);
+    color: var(--white);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+}
+
+.tag-status-belum_digunakan {
+    background: linear-gradient(135deg, var(--info-color), #20c997);
+    color: var(--white);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(23, 162, 184, 0.3);
+}
+
+.tag-status-dibatalkan {
+    background: linear-gradient(135deg, var(--error-color), #e74c3c);
+    color: var(--white);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+}
+
+.tag-status-kadaluarsa {
+    background: linear-gradient(135deg, var(--secondary-color), #6c757d);
+    color: var(--white);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(108, 117, 125, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-title {
+        font-size: 1.8rem;
+    }
+    
+    .card {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .card p {
+        font-size: 1rem;
+    }
+    
+    .data-table {
+        font-size: 0.85rem;
+    }
+    
+    .data-table thead th,
+    .data-table tbody td {
+        padding: 12px 10px;
+    }
+    
+    .btn-back {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .data-table thead th,
+    .data-table tbody td {
+        padding: 10px 8px;
+        font-size: 0.8rem;
+    }
+    
+    .tag-status-digunakan,
+    .tag-status-belum_digunakan,
+    .tag-status-dibatalkan,
+    .tag-status-kadaluarsa {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+    }
+}
+
+/* Animation for table load */
+.data-table tbody tr {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+.data-table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+.data-table tbody tr:nth-child(2) { animation-delay: 0.2s; }
+.data-table tbody tr:nth-child(3) { animation-delay: 0.3s; }
+.data-table tbody tr:nth-child(4) { animation-delay: 0.4s; }
+.data-table tbody tr:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading effect */
+.card, .table-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before, .table-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+    transition: left 0.6s ease;
+}
+</style>
+
+<a href="{{ url_for('admin_kelola_pemesanan') }}" class="btn-back">← Kembali ke Daftar Pemesanan</a>
+
+<h1 class="dashboard-title">Detail Pemesanan {{ pemesanan.id }}</h1>
+
+<div class="card">
+    <p><strong>Pemesan:</strong> {{ pemesanan.pengguna.nama_lengkap }}</p>
+    <p><strong>Email:</strong> {{ pemesanan.pengguna.email }}</p>
+    <p><strong>Tanggal Pesan:</strong> {{ pemesanan.tanggal_pemesanan.strftime('%d %B %Y, %H:%M') }}</p>
+</div>
+
+<h3>Tiket dalam Pemesanan Ini</h3>
+
+<div style="overflow-x: auto;" class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID Tiket</th>
+                <th>Wahana</th>
+                <th>Jadwal</th>
+                <th>Kode Booking</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tiket in pemesanan.tikets %}
+            <tr>
+                <td>{{ tiket.id }}</td>
+                <td>{{ tiket.jadwal.wahana.nama_wahana }}</td>
+                <td>{{ tiket.jadwal.waktu_mulai.strftime('%d %b, %H:%M') }}</td>
+                <td><strong>{{ tiket.kode_booking }}</strong></td>
+                <td><span class="tag-status-{{ tiket.status|lower }}">{{ tiket.status }}</span></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

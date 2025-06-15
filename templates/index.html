@@ -1,0 +1,93 @@
+{% extends 'layout.html' %}
+{% block title %}Pilih Wahana Favoritmu!{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold mb-3 position-relative main-title">
+            <span class="position-relative">
+                🎢 Pilih Wahana Favoritmu! 🎠
+                <span class="title-underline position-absolute top-0 start-50 translate-middle-x"></span>
+            </span>
+        </h1>
+        <p class="lead main-subtitle">
+            Temukan petualangan seru yang menanti Anda di taman bermain kami
+        </p>
+    </div>
+
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8 col-xl-7">
+            <form method="GET" action="{{ url_for('halaman_utama') }}" class="position-relative">
+                <div class="search-container">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-transparent border-0 pe-0">
+                            <i class="fas fa-search fs-5 text-muted"></i>
+                        </span>
+                        <input type="text" name="q" class="form-control bg-transparent border-0 shadow-none ps-2"
+                            placeholder="Cari wahana impian Anda..." value="{{ request.args.get('q', '') }}">
+                        <div class="search-buttons">
+                            <button class="btn btn-lg btn-primary-gradient" type="submit">
+                                <span class="position-relative z-1">🔍 Cari</span>
+                            </button>
+                            <a href="{{ url_for('halaman_utama') }}" class="btn btn-lg btn-secondary-gradient">
+                                <span class="position-relative z-1">🔄 Refresh</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
+        {% for wahana in daftar_wahana %}
+        <div class="col">
+            <div class="wahana-card h-100">
+                <div class="card-img-container">
+                    <div class="card-img-top"
+                        style="background-image: url('{{ url_for('static', filename='images/' + wahana.gambar_url) }}');">
+                    </div>
+                    <div class="card-img-overlay"></div>
+                    <div class="badge-container">
+                        <span class="badge badge-popular">⭐ Populer</span>
+                    </div>
+                </div>
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="mb-3">
+                        <h5 class="card-title fw-bold mb-2 lh-sm">{{ wahana.nama_wahana }}</h5>
+                        <div class="title-accent"></div>
+                    </div>
+                    <p class="card-text flex-grow-1 mb-4">{{ wahana.deskripsi }}</p>
+                    <div class="mt-auto">
+                        <a href="{{ url_for('detail_wahana', id_wahana=wahana.id) }}" class="btn btn-detail w-100">
+                            <span class="btn-text">
+                                <span class="me-2">🎫</span>
+                                Lihat Detail & Jadwal
+                                <span class="ms-2 detail-arrow">→</span>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <div class="empty-state">
+                    <div class="empty-state-icon">🎢</div>
+                    <h3 class="fw-bold mb-3">Tidak ada wahana ditemukan</h3>
+                    <p class="mb-4">
+                        Maaf, pencarian Anda tidak menemukan hasil. Coba kata kunci lain atau refresh halaman.
+                    </p>
+                    <a href="{{ url_for('halaman_utama') }}" class="btn btn-lg btn-primary-gradient">
+                        🏠 Kembali ke Beranda
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,217 @@
+{% extends 'admin/layout.html' %}
+{% block title %}Kelola Pengguna{% endblock %}
+
+{% block content %}
+<style>
+:root {
+    --primary-color: #007bff;
+    --primary-dark: #0056b3;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --info-color: #17a2b8;
+    --bg-light: #f8f9fa;
+    --text-dark: #343a40;
+    --white: #ffffff;
+    --border-color: #dee2e6;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Back Button */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--white);
+    color: var(--primary-color);
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    border: 2px solid var(--primary-color);
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+}
+
+.btn-back:hover {
+    background: var(--primary-color);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.2);
+}
+
+.header-action {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    padding: 1.5rem 0;
+}
+
+.dashboard-title {
+    color: var(--text-dark);
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.table-container {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.data-table thead {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+}
+
+.data-table thead th {
+    color: var(--white);
+    font-weight: 600;
+    text-align: left;
+    padding: 1rem 0.75rem;
+    border: none;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.data-table tbody tr {
+    background: var(--white);
+    transition: all 0.3s ease;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table tbody tr:hover {
+    background: var(--bg-light);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.data-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.data-table td {
+    padding: 1rem 0.75rem;
+    color: var(--text-dark);
+    vertical-align: middle;
+    border: none;
+}
+
+/* User-specific styles */
+.user-id {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.user-name {
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.user-email {
+    color: var(--secondary-color);
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.tag-role {
+    display: inline-block;
+    color: var(--white);
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+/* Styling for different roles */
+.tag-role-admin {
+    background: linear-gradient(135deg, var(--error-color), #a71e2a);
+}
+
+.tag-role-user, .tag-role-pengguna {
+    background: linear-gradient(135deg, var(--success-color), #1e7e34);
+}
+
+/* Empty state styling */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--secondary-color);
+}
+
+.empty-state h3 {
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+}
+
+@media (max-width: 768px) {
+    .header-action {
+        justify-content: center;
+    }
+    .dashboard-title {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+}
+</style>
+
+<a href="{{ url_for('admin_dashboard') }}" class="btn-back">← Kembali ke Dashboard</a>
+
+<div class="header-action">
+    <h1 class="dashboard-title">Manajemen Pengguna</h1>
+</div>
+
+<div class="table-container">
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama Lengkap</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Tanggal Daftar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pengguna in daftar_pengguna %}
+                <tr>
+                    <td><span class="user-id">#{{ pengguna.id }}</span></td>
+                    <td><span class="user-name">{{ pengguna.nama_lengkap }}</span></td>
+                    <td><span class="user-email">{{ pengguna.email }}</span></td>
+                    <td><span class="tag-role tag-role-{{ pengguna.role | lower }}">{{ pengguna.role }}</span></td>
+                    <td>{{ pengguna.tanggal_daftar.strftime('%d %b %Y, %H:%M') }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="empty-state">
+                        <h3>Belum Ada Pengguna</h3>
+                        <p>Tidak ada data pengguna yang terdaftar saat ini.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

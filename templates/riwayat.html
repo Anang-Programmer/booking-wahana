@@ -1,0 +1,90 @@
+{% extends 'layout.html' %}
+
+{% block title %}Riwayat Booking Saya{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="notification {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <a href="{{ url_for('halaman_utama') }}" class="btn-back">&larr; Kembali ke Beranda</a>
+    <h1 style="color: white;">Riwayat Booking Saya</h1>
+
+    {% if riwayat %}
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Wahana</th>
+                    <th>Jadwal</th>
+                    <th>Kode Booking & Aksi Cetak</th>
+                    <th>Aksi Pembatalan</th>
+                </tr>
+            </thead>
+<tbody>
+    {% for pemesanan in riwayat %}
+        {% if pemesanan.tikets %}
+            {% for tiket in pemesanan.tikets %}
+                <tr>
+                    <td data-label="Wahana" 
+                        {% if loop.first %} 
+                            rowspan="{{ pemesanan.tikets|length }}" 
+                        {% else %} 
+                            class="desktop-hidden" 
+                        {% endif %}>
+                        {{ tiket.jadwal.wahana.nama_wahana }}
+                    </td>
+                    
+                    <td data-label="Jadwal"
+                        {% if loop.first %} 
+                            rowspan="{{ pemesanan.tikets|length }}" 
+                        {% else %} 
+                            class="desktop-hidden" 
+                        {% endif %}>
+                        {{ tiket.jadwal.waktu_mulai.strftime('%d %b %Y, %H:%M') }}
+                    </td>
+                    
+                    <td data-label="Tiket">
+                        <div class="ticket-entry">
+                            <strong>{{ tiket.kode_booking }}</strong>
+                            <a href="{{ url_for('cetak_tiket', id=tiket.id) }}" class="btn btn-sm btn-outline">Cetak</a>
+                        </div>
+                    </td>
+
+                    {% if loop.first %}
+                        <td class="cancellation-cell" data-label="Aksi Pembatalan" rowspan="{{ pemesanan.tikets|length }}" data-cancellation-end="{{ (pemesanan.tanggal_pemesanan + timedelta(seconds=120)).isoformat() }}Z">
+                            <form action="{{ url_for('batal_booking', pemesanan_id=pemesanan.id) }}" method="POST" onsubmit="return confirm('Anda yakin ingin membatalkan seluruh pesanan ini?');" style="display: none;">
+                                <button type="submit" class="btn btn-danger btn-sm">Batalkan</button>
+                            </form>
+                            <span class="timer-text" style="display: none;"></span>
+                            <span class="status-expired" style="display: block;">-</span>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+</tbody>
+        </table>
+    {% else %}
+        <div class="notification info">Anda belum memiliki riwayat booking.</div>
+    {% endif %}
+</div>
+
+<style>
+    .history-table td {
+        vertical-align: middle;
+    }
+    .ticket-entry {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0;
+    }
+</style>
+
+{% endblock %}

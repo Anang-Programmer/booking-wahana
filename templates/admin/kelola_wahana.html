@@ -1,0 +1,326 @@
+{% extends 'admin/layout.html' %}
+{% block title %}Kelola Wahana{% endblock %}
+
+{% block content %}
+<style>
+:root {
+    --primary-color: #007bff;
+    --primary-dark: #0056b3;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --info-color: #17a2b8;
+    --bg-light: #f8f9fa;
+    --text-dark: #343a40;
+    --white: #ffffff;
+    --border-color: #dee2e6;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Back Button */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--white);
+    color: var(--primary-color);
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    border: 2px solid var(--primary-color);
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+}
+
+.btn-back:hover {
+    background: var(--primary-color);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.2);
+}
+
+.header-action {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    padding: 1.5rem 0;
+}
+
+.dashboard-title {
+    color: var(--text-dark);
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.table-container {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.data-table thead {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+}
+
+.data-table thead th {
+    color: var(--white);
+    font-weight: 600;
+    text-align: left;
+    padding: 1rem 0.75rem;
+    border: none;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.data-table tbody tr {
+    background: var(--white);
+    transition: all 0.3s ease;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table tbody tr:hover {
+    background: var(--bg-light);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.data-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.data-table td {
+    padding: 1rem 0.75rem;
+    color: var(--text-dark);
+    vertical-align: middle;
+    border: none;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    font-family: inherit;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-dark), #004085);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    color: var(--white);
+    text-decoration: none;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, var(--secondary-color), #5a6268);
+    color: var(--white);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #5a6268, #495057);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+    color: var(--white);
+    text-decoration: none;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--error-color), #c82333);
+    color: var(--white);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #c82333, #a71e2a);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    color: var(--white);
+}
+
+.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+}
+
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.delete-form {
+    margin: 0;
+    display: inline-block;
+}
+
+.capacity-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--info-color), #138496);
+    color: var(--white);
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.wahana-id {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.wahana-name {
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.location-text {
+    color: var(--secondary-color);
+    font-style: italic;
+}
+
+/* Empty state styling */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--secondary-color);
+}
+
+.empty-state h3 {
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+}
+
+.empty-state p {
+    margin-bottom: 1.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header-action {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    
+    .dashboard-title {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+    
+    .data-table thead th,
+    .data-table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.85rem;
+    }
+    
+    .btn-sm {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .action-buttons .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .data-table {
+        min-width: 600px;
+    }
+}
+</style>
+<a href="{{ url_for('admin_dashboard') }}" class="btn-back">← Kembali ke Dashboard</a>
+<div class="header-action">
+    <h1 class="dashboard-title">Manajemen Wahana</h1>
+    <a href="{{ url_for('admin_tambah_wahana') }}" class="btn btn-primary">+ Tambah Wahana Baru</a>
+</div>
+
+<div class="table-container">
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama Wahana</th>
+                    <th>Lokasi</th>
+                    <th>Kapasitas</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for wahana in daftar_wahana %}
+                <tr>
+                    <td><span class="wahana-id">{{ wahana.id }}</span></td>
+                    <td><span class="wahana-name">{{ wahana.nama_wahana }}</span></td>
+                    <td><span class="location-text">{{ wahana.lokasi }}</span></td>
+                    <td><span class="capacity-badge">{{ wahana.kapasitas }} orang</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{{ url_for('admin_edit_wahana', id=wahana.id) }}" class="btn btn-secondary btn-sm">
+                                Edit
+                            </a>
+                            <form action="{{ url_for('admin_hapus_wahana', id=wahana.id) }}" method="POST" 
+                                  onsubmit="return confirm('Anda yakin ingin menghapus wahana {{ wahana.nama_wahana }}?');" 
+                                  class="delete-form">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    Hapus
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="empty-state">
+                        <h3>Belum Ada Wahana</h3>
+                        <p>Tidak ada data wahana yang tersedia saat ini.</p>
+                        <a href="{{ url_for('admin_tambah_wahana') }}" class="btn btn-primary">
+                            + Tambah Wahana Pertama
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

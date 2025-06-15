@@ -1,0 +1,13 @@
+1. Python Version 3.10.0
+2. Run = py app.py >> Masuk ke url di terminal, contoh  * Running on http://127.0.0.1:5000
+3. sebelum run, install dulu seluruh file requirements.txt dengan perintah pip install -r requirements.txt >> Disarankan pakai virtual environment
+4. Database di setting cukup ketat, hati" dalam mengakses langsung ke database,
+5. Css bagian admin berada di /static/css/styles.css >> masih sangat mentah, hapus saja semua kalau perlu
+6. Maafkan saya, jujur pusing kali pake ni framework, jadi mungkin ada bug yang tidak saya ketahui, tapi saya sudah berusaha semaksimal mungkin, goodluck Firda 😊
+7. Untuk mengakses admin, email = admin@wahana.com dan password admin123, akses user bisa di register sendiri yah
+8. Jangan coba-coba membuat akun admin langsung dari database, karena dipastikan 100% tidak akan berhasil. Sistem ini menggunakan protokol hash SHA-256 (melalui library passlib), yang secara default menggunakan salt acak setiap kali melakukan hash.
+Akibatnya, meskipun password yang dimasukkan sama, nilai hash yang dihasilkan akan selalu berbeda, sehingga tidak bisa diverifikasi tanpa proses hashing dan pengecekan yang sesuai di sisi backend.
+Verifikasi password hanya dapat dilakukan menggunakan fungsi sha256_crypt.verify(password_plaintext, hash_terdaftar) pada saat login.
+9. File database yang benar bernama db_booking_wahana.sql, yang dokumentasi.sql hanya sebagai refrensi dan tidak di pakai, jngn di hapus tapi
+10. Silahkan letak kan folder ini dimana pun kamu mau, karena ini framework flask jadi tidak harus berada di xampp, dan saat run xampp di hidupkan
+11. Oke sudah itu saja :)

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>E-Tiket RideOn</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="ticket-page-body">
+
+    <!-- Wrapper baru untuk membantu proses cetak -->
+    <div class="ticket-wrapper">
+        <div class="ticket-container">
+            <div class="ticket-header">
+                <h2>E-TIKET RIDE ON</h2>
+                <p>Tunjukkan tiket ini di pintu masuk wahana</p>
+            </div>
+            <div class="ticket-content">
+                <h3>{{ tiket.jadwal.wahana.nama_wahana }}</h3>
+                <div class="ticket-details">
+                    <div class="detail-item">
+                        <span>Nama Pemesan</span>
+                        <strong>{{ tiket.pemesanan.pengguna.nama_lengkap }}</strong>
+                    </div>
+                    <div class="detail-item">
+                        <span>Jadwal</span>
+                        <strong>{{ tiket.jadwal.waktu_mulai.strftime('%d %B %Y, %H:%M') }}</strong>
+                    </div>
+                    <div class="detail-item">
+                        <span>Lokasi</span>
+                        <strong>{{ tiket.jadwal.wahana.lokasi }}</strong>
+                    </div>
+                     <div class="detail-item">
+                        <span>Status Tiket</span>
+                        <!-- Menambahkan tag status agar warnanya ikut tercetak -->
+                        <strong><span class="tag-status-{{ tiket.status|lower }}">{{ tiket.status }}</span></strong>
+                    </div>
+                </div>
+                <div class="ticket-qr">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ tiket.kode_booking }}" alt="QR Code">
+                    <p class="booking-code">{{ tiket.kode_booking }}</p>
+                </div>
+            </div>
+            <div class="ticket-footer">
+                <p>Terima kasih dan selamat bersenang-senang!</p>
+            </div>
+        </div>
+
+        <div class="print-actions">
+            <button onclick="window.print()" class="btn">Cetak Tiket</button>
+            <a href="{{ url_for('riwayat_booking') }}" class="btn btn-secondary">Kembali ke Riwayat</a>
+        </div>
+    </div>
+
+</body>
+</html>

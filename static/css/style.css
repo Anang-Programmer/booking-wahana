@@ -1,0 +1,1240 @@
+/* @import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ==========================================================================
+   1. CSS Variables (Variabel Global)
+   ========================================================================== */
+/**
+ * Mendefinisikan variabel global untuk konsistensi di seluruh aplikasi.
+ * Ini termasuk palet warna, ukuran bayangan, radius sudut, dan durasi transisi.
+ * Menggunakan variabel memudahkan perubahan tema dan menjaga konsistensi visual.
+ */
+:root {
+  /* Palet Warna Utama */
+  --primary-color: #3B82F6;
+  --primary-hover: #2563EB;
+  --primary-light: #DBEAFE;
+  --secondary-color: #10B981;
+  --secondary-hover: #059669;
+  --accent-color: #F59E0B;
+
+  /* Warna Status */
+  --danger-color: #EF4444;
+  --danger-hover: #DC2626;
+  --warning-color: #F59E0B;
+  --success-color: #10B981;
+  --info-color: #3B82F6;
+
+  /* Warna Teks */
+  --text-primaryy: #1F2937;
+  --text-secondaryy: #6B7280;
+  --text-light: #9CA3AF;
+
+  /* Warna Latar Belakang */
+  --bg-white: #FFFFFF;
+  --bg-secondaryy: #F8FAFC;
+  --bg-tertiary: #F1F5F9;
+
+  /* Warna Border */
+  --border-color: #E5E7EB;
+  --border-focus: #3B82F6;
+
+  /* Ukuran Bayangan (Shadows) */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* Radius Sudut (Border Radius) */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Durasi Transisi */
+  --transition-fast: 0.15s ease-in-out;
+  --transition-normal: 0.3s ease-in-out;
+  --transition-slow: 0.5s ease-in-out;
+}
+
+/* ==========================================================================
+   2. Reset & Base Styles (Gaya Dasar & Reset)
+   ========================================================================== */
+/**
+ * Mereset margin dan padding default browser.
+ * Mengatur gaya dasar untuk elemen `html` dan `body`, termasuk font,
+ * warna teks, dan latar belakang gradien. Juga menambahkan animasi fade-in
+ * sederhana untuk body.
+ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primaryy);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  animation: fadeIn 0.8s ease-in-out;
+    
+  /* --- PENAMBAHAN UNTUK STICKY FOOTER --- */
+display: flex;
+flex-direction: column;
+  /* -------------------------------------- */
+}
+
+/* Animasi untuk memunculkan konten halaman secara halus */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   3. Header & Navigation (Kepala Halaman & Navigasi)
+   ========================================================================== */
+/**
+ * Styling untuk header utama yang bersifat "sticky" (tetap di atas saat scroll).
+ * Mencakup logo, menu navigasi, dan tombol-tombol seperti login/logout.
+ */
+.main-header {
+  background: #ffffff;
+  padding: 0 2rem;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 64px;
+}
+
+.main-header .logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: var(--text-secondaryy);
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.main-nav a:hover {
+  color: var(--primary-color);
+  background-color: var(--bg-secondaryy);
+}
+
+/* Gaya khusus untuk tombol Login dan Logout di navigasi */
+.main-nav .btn-login {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+  font-weight: 600;
+}
+
+.main-nav .btn-login:hover {
+  background-color: var(--primary-hover);
+  color: #ffffff;
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 6px 15px rgb(80, 153, 255);
+
+
+}
+
+.main-nav .btn-logout {
+  background-color: var(--bg-white);
+  color: var(--text-secondaryy);
+  border: 1px solid var(--border-color);
+}
+
+.main-nav .btn-logout:hover {
+  background-color: #fee2e2;
+  color: var(--danger-hover);
+  border-color: #fecaca;
+}
+
+/* ==========================================================================
+   4. Layout & Container (Tata Letak & Kontainer)
+   ========================================================================== */
+/**
+ * Gaya untuk kontainer utama yang membungkus konten halaman.
+ * Memastikan lebar maksimum dan penataan yang konsisten.
+ */
+main {
+  flex: 1;
+  padding: 2rem 0;
+  flex-grow: 1;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* ==========================================================================
+   5. Typography (Tipografi)
+   ========================================================================== */
+/**
+ * Mendefinisikan gaya default untuk elemen teks seperti h1, h2, dan h3.
+ * Termasuk ukuran font, ketebalan, warna, dan margin.
+ */
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--bg-white);
+  margin-bottom: 2rem;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  animation: slideInDown 0.8s ease-out;
+}
+
+h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--text-primaryy);
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-primaryy);
+  margin-bottom: 0.5rem;
+}
+
+@keyframes slideInDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   6. Card Component (Komponen Kartu)
+   ========================================================================== */
+/**
+ * Gaya untuk kartu yang menampilkan item seperti "Wahana".
+ * Menggunakan grid layout yang responsif dan memiliki efek hover yang menarik.
+ */
+.wahana-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.wahana-card-link {
+  text-decoration: none;
+  display: block;
+  transition: var(--transition-normal);
+}
+
+.wahana-card {
+  background: var(--bg-white);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  position: relative;
+  animation: slideInUp 0.6s ease-out forwards;
+}
+
+/* Animasi untuk kartu saat muncul */
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Memberi delay animasi yang berbeda untuk setiap kartu */
+.wahana-card-link:nth-child(1) .wahana-card { animation-delay: 0.1s; }
+.wahana-card-link:nth-child(2) .wahana-card { animation-delay: 0.2s; }
+.wahana-card-link:nth-child(3) .wahana-card { animation-delay: 0.3s; }
+.wahana-card-link:nth-child(4) .wahana-card { animation-delay: 0.4s; }
+
+/* Efek hover untuk mengangkat kartu */
+.wahana-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: var(--shadow-xl);
+}
+
+.card-image {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gradien overlay di atas gambar kartu */
+.card-image::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.3));
+  transition: var(--transition-normal);
+}
+
+.wahana-card:hover .card-image::after {
+  height: 70%;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
+}
+
+.card-content {
+  padding: 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.card-content h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-primaryy);
+  margin-bottom: 0.5rem;
+  transition: var(--transition-fast);
+}
+
+.wahana-card:hover .card-content h2 {
+  color: var(--primary-color);
+}
+
+.card-content p {
+  color: var(--text-secondaryy);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+.search-input {
+    padding: 0.5rem;
+    width: 100%;
+    max-width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* ==========================================================================
+   7. Button Component (Komponen Tombol)
+   ========================================================================== */
+/**
+ * Gaya umum untuk semua tombol. Termasuk varian warna (primary, secondary, danger),
+ * ukuran, dan efek hover/active/focus yang interaktif.
+ */
+.btn {
+  display: inline-block;
+  color: white;
+  padding: 0.875rem 2rem;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-weight: 500;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+}
+
+/* Efek kilau (shimmer) saat hover */
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left var(--transition-normal);
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 25px rgba(59, 130, 246, 0.4);
+}
+
+.btn:active {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Varian tombol */
+.btn-secondary {
+  background: linear-gradient(135deg, var(--secondary-color), var(--secondary-hover));
+}
+.btn-secondary:hover {
+  box-shadow: 0 15px 25px rgba(16, 185, 129, 0.4);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, var(--danger-color), var(--danger-hover));
+}
+.btn-danger:hover {
+  box-shadow: 0 15px 25px rgba(239, 68, 68, 0.4);
+}
+
+/* Tombol kembali dengan efek glassmorphism */
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-primaryy);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  transition: var(--transition-fast);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-back:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateX(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ==========================================================================
+   8. Form Component (Komponen Formulir)
+   ========================================================================== */
+/**
+ * Styling untuk elemen formulir: input, select, textarea, dan label.
+ * Termasuk efek focus dan validasi sederhana.
+ */
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative; /* Diperlukan untuk floating labels */
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  color: var(--text-secondaryy);
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  transition: var(--transition-fast);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  transition: var(--transition-fast);
+  background: var(--bg-white);
+  color: var(--text-primaryy);
+}
+
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+  border-color: var(--text-light);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Efek validasi sederhana pada input */
+.form-group input:valid:not(:placeholder-shown) {
+  border-color: var(--success-color);
+}
+.form-group input:invalid:not(:placeholder-shown) {
+  border-color: var(--danger-color);
+}
+
+/* Efek "Floating Labels" (opsional, bisa diaktifkan jika struktur HTML sesuai) */
+/*
+.form-group input:focus + label,
+.form-group input:not(:placeholder-shown) + label {
+  transform: translateY(-1.5rem) scale(0.9);
+  color: var(--primary-color);
+}
+*/
+
+/* ==========================================================================
+   9. Authentication Pages (Halaman Otentikasi)
+   ========================================================================== */
+/**
+ * Kontainer dan kartu khusus untuk halaman login dan register.
+ * Menggunakan efek glassmorphism untuk tampilan modern.
+ */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 2rem;
+}
+
+.form-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-xl);
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: zoomIn 0.6s ease-out;
+}
+
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.form-card h2 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: var(--text-primaryy);
+}
+
+.form-card p {
+  text-align: center;
+  color: var(--text-secondaryy);
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.auth-switch p {
+  color: var(--text-secondaryy);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.auth-switch a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   10. Detail & Booking Pages (Halaman Detail & Pemesanan)
+   ========================================================================== */
+/**
+ * Layout dan styling untuk halaman detail dan bagian pemesanan.
+ * Menggunakan grid dan efek glassmorphism.
+ */
+.detail-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: slideInLeft 0.6s ease-out;
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.detail-container img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-normal);
+}
+
+.detail-container img:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-xl);
+}
+
+.detail-info h1 {
+  color: var(--text-primaryy);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  text-shadow: none;
+  text-align: left;
+}
+
+.detail-info p {
+  color: var(--text-secondaryy);
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.detail-info p strong {
+  color: var(--text-primaryy);
+  font-weight: 600;
+}
+
+/* Bagian Pemesanan (Booking) */
+.booking-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: slideInRight 0.6s ease-out;
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.booking-section h2 {
+  color: var(--text-primaryy);
+  border-bottom: 2px solid var(--primary-light);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ==========================================================================
+   11. Table Component (Komponen Tabel)
+   ========================================================================== */
+/**
+ * Gaya untuk tabel, misalnya untuk riwayat pemesanan.
+ * Desain bersih dengan efek hover yang interaktif.
+ */
+.history-table {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: fadeInUp 0.6s ease-out;
+  border-collapse: collapse; /* Menjamin border-bottom bekerja konsisten */
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.history-table thead {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  color: white;
+}
+
+.history-table th,
+.history-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.history-table th {
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.history-table tbody tr {
+  transition: var(--transition-fast);
+  position: relative; /* Untuk efek hover */
+}
+
+.history-table tbody tr:hover {
+  background: var(--primary-light);
+  transform: scale(1.01);
+  box-shadow: var(--shadow-md);
+}
+
+/* Efek shimmer pada baris tabel saat hover */
+.history-table tbody tr::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+  transition: var(--transition-normal);
+}
+
+.history-table tbody tr:hover::before {
+  left: 100%;
+}
+
+/* ==========================================================================
+   12. Ticket Component (Komponen Tiket)
+   ========================================================================== */
+/**
+ * Styling khusus untuk halaman tiket yang bisa dicetak.
+ * Desain menyerupai tiket fisik dengan QR code.
+ */
+.ticket-page-body {
+  background: var(--bg-secondaryy);
+  font-family: 'Inter', sans-serif;
+  padding: 2rem;
+}
+
+.ticket-wrapper {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.ticket-container {
+  background: white;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  margin-bottom: 2rem;
+  animation: zoomIn 0.6s ease-out;
+  position: relative;
+}
+
+.ticket-header {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+.ticket-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.ticket-content {
+  padding: 2rem;
+}
+
+.ticket-content h3 {
+  color: var(--primary-color);
+  font-size: 1.8rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.ticket-details {
+  margin-bottom: 2rem;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+.detail-item:last-child { border-bottom: none; }
+
+.detail-item span {
+  color: var(--text-secondaryy);
+  font-weight: 500;
+}
+.detail-item strong {
+  color: var(--text-primaryy);
+  font-weight: 600;
+}
+
+.ticket-qr {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-lg);
+  margin-bottom: 1rem;
+}
+
+.ticket-qr img {
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.booking-code {
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-top: 1rem;
+  letter-spacing: 2px;
+}
+
+.ticket-footer {
+  background: var(--bg-tertiary);
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--text-secondaryy);
+}
+
+.print-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Tag Status */
+.tag-status-aktif,
+.tag-status-selesai {
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.tag-status-aktif { background: var(--success-color); }
+.tag-status-selesai { background: var(--text-light); }
+
+/* ==========================================================================
+   13. Notification & Status (Notifikasi & Status)
+   ========================================================================== */
+/**
+ * Gaya untuk bar notifikasi (sukses, error, info).
+ * Termasuk animasi shimmer untuk menarik perhatian.
+ */
+.notification {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: var(--radius-sm);
+  color: #fff;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.notification.success { background-color: var(--success-color); }
+.notification.error { background-color: var(--danger-color); }
+.notification.info { background-color: var(--info-color); }
+
+@keyframes notificationShimmer {
+  0%   { left: -100%; }
+  50%  { left: 100%; }
+  100% { left: 100%; }
+}
+
+.notification::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: notificationShimmer 2s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   14. Footer (Bagian Kaki Halaman)
+   ========================================================================== */
+/**
+ * Styling untuk footer dengan efek glassmorphism.
+ */
+footer {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.5rem 0;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 3rem;
+}
+
+/* ==========================================================================
+   15. Miscellaneous & Utilities (Lain-lain & Utilitas)
+   ========================================================================== */
+/**
+ * Kelas utilitas dan animasi tambahan seperti spinner, skeleton loading,
+ * dan teks gradien.
+ */
+
+/* Animasi Spinner untuk loading */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+/* Skeleton Loading untuk placeholder konten */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+@keyframes loading {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Teks dengan animasi gradien */
+.animated-gradient-text {
+  background: linear-gradient(-45deg, var(--primary-color), var(--secondary-color), var(--accent-color), var(--primary-color));
+  background-size: 400% 400%;
+  animation: gradientShift 3s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-tertiary); }
+::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary-hover); }
+
+/* ==========================================================================
+   16. Media Queries & Responsive Design (Desain Responsif)
+   ========================================================================== */
+/**
+ * Menyesuaikan layout untuk berbagai ukuran layar, dari tablet hingga mobile.
+ */
+@media (max-width: 1024px) {
+  .wahana-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .container,
+  header .container {
+    padding: 0 1rem;
+  }
+  h1 { font-size: 2rem; }
+  .wahana-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .detail-container { grid-template-columns: 1fr; gap: 1.5rem; padding: 1.5rem; }
+  .detail-container img { height: 250px; }
+  .form-card { padding: 2rem; margin: 1rem; }
+  .history-table { font-size: 0.9rem; }
+  .history-table th, .history-table td { padding: 0.75rem 0.5rem; }
+  .ticket-container { margin: 1rem; }
+  .print-actions { flex-direction: column; padding: 0 1rem; }
+  .history-table .desktop-hidden {
+    display: block !important; /* Paksa tampil di mobile */
+}
+}
+
+@media (max-width: 480px) {
+  .container { padding: 0 0.75rem; }
+  h1 { font-size: 1.8rem; }
+  .btn { padding: 0.75rem 1.5rem; font-size: 0.9rem; }
+  .form-card { padding: 1.5rem; }
+  .detail-container { padding: 1rem; }
+  .booking-section { padding: 1.5rem; }
+  .ticket-header, .ticket-content { padding: 1.5rem; }
+}
+
+/* ==========================================================================
+   17. Print & Accessibility (Gaya Cetak & Aksesibilitas)
+   ========================================================================== */
+/**
+ * Menyesuaikan gaya untuk mode cetak, mode kontras tinggi, dan
+ * preferensi pengurangan gerakan (reduced motion).
+ */
+
+/* Gaya saat halaman dicetak */
+@media print {
+  body { background: white !important; }
+  .main-header, .btn, .btn-back, footer, .print-actions { display: none !important; }
+  .ticket-container { box-shadow: none !important; border: 1px solid #ddd !important; }
+}
+
+/* Dukungan untuk mode Kontras Tinggi */
+@media (prefers-contrast: high) {
+  :root {
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.3);
+    --shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.3);
+  }
+  .btn, .wahana-card { border: 2px solid currentColor; }
+}
+
+/* Dukungan untuk Pengurangan Gerakan */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Peningkatan Aksesibilitas untuk Focus */
+.btn:focus-visible,
+.form-group input:focus-visible,
+.form-group select:focus-visible {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   18. Responsive Header & Hamburger Menu (Tambahan)
+   ========================================================================== */
+
+/* Tombol Hamburger */
+.hamburger-menu {
+  display: none; /* Sembunyikan di desktop */
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 1100;
+}
+
+/* Aturan untuk layar kecil (misal, di bawah 768px) */
+@media (max-width: 768px) {
+  .hamburger-menu {
+    display: block;
+    cursor: pointer;
+  }
+
+  .main-nav {
+    display: none;
+  }
+
+  .nav-wrapper {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1050;
+    transition: opacity 0.3s ease;
+  }
+
+  .nav-wrapper.active {
+    display: block;
+  }
+
+  .nav-wrapper.active .main-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--bg-white);
+    padding: 2rem 3rem;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    width: 80%;
+    max-width: 320px;
+  }
+
+  .nav-wrapper.active .main-nav a,
+  .nav-wrapper.active .main-nav .nav-user {
+    font-size: 1.2rem;
+    padding: 0.75rem 1.5rem;
+    width: 100%;
+    text-align: center;
+    color: var(--text-secondaryy);
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+  }
+
+  .nav-wrapper.active .main-nav a:hover {
+    color: var(--primary-color);
+    background-color: var(--bg-secondaryy);
+  }
+
+  .nav-wrapper.active .main-nav .btn-login {
+    background-color: var(--primary-color);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .nav-wrapper.active .main-nav .btn-login:hover {
+    background-color: var(--primary-hover);
+    color: #fff;
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 6px 15px rgba(80, 153, 255, 0.4);
+  }
+
+  .nav-wrapper.active .main-nav .btn-logout {
+    background-color: var(--bg-white);
+    color: var(--text-secondaryy);
+    border: 1px solid var(--border-color);
+  }
+
+  .nav-wrapper.active .main-nav .btn-logout:hover {
+    background-color: #fee2e2;
+    color: var(--danger-hover);
+    border-color: #fecaca;
+  }
+}
+
+
+/* ==========================================================================
+   19. Responsive History Table (Mobile View)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  /* Sembunyikan header tabel di mobile, karena kita akan menggunakan label */
+  .history-table thead {
+    display: none;
+  }
+
+  /* Ubah setiap baris menjadi blok/kartu */
+  .history-table tbody tr {
+    display: block;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-md);
+    background: var(--bg-white);
+  }
+
+  /* Ubah setiap sel menjadi blok dan beri jarak */
+  .history-table td {
+    display: block;
+    width: 100%;
+    text-align: right; /* Posisikan data di kanan, label di kiri */
+    padding-left: 50%; /* Beri ruang untuk label */
+    position: relative;
+    border-bottom: 1px dotted var(--border-color);
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  
+  /* Hapus beberapa gaya bawaan */
+  .history-table td[rowspan] {
+    rowspan: 1; /* Nonaktifkan rowspan */
+  }
+
+  .history-table td:last-child {
+    border-bottom: none; /* Hapus border di sel terakhir */
+  }
+
+  /* Gunakan pseudo-element ::before untuk membuat label dari header tabel */
+  .history-table td::before {
+    content: attr(data-label); /* Ambil teks label dari atribut data-label */
+    position: absolute;
+    left: 1rem;
+    width: calc(50% - 2rem);
+    padding-right: 10px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primaryy);
+  }
+  
+  /* Atur agar sel yang seharusnya kosong (karena rowspan) tidak tampil di mobile */
+  .history-table td.hide-on-mobile {
+    display: none;
+  }
+
+  /* Penyesuaian khusus untuk kolom-kolom tertentu */
+  
+  /* Kode Booking & Cetak */
+  .history-table .ticket-entry {
+    flex-direction: column; /* Susun kode dan tombol secara vertikal */
+    align-items: flex-end; /* Ratakan ke kanan */
+    gap: 0.5rem;
+  }
+
+  .history-table .ticket-entry .btn {
+    width: auto;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  /* Aksi Pembatalan */
+  .history-table .cancellation-cell {
+    text-align: center;
+    padding-left: 0; /* Hapus padding karena tidak ada data di kanan */
+  }
+  
+  .history-table .cancellation-cell::before {
+     width: 100%;
+     position: static; /* Jadikan label sebagai bagian dari flow normal */
+     display: block;
+     text-align: center;
+     margin-bottom: 0.5rem;
+  }
+
+  .history-table .cancellation-cell form,
+  .history-table .cancellation-cell .timer-text,
+  .history-table .cancellation-cell .status-expired {
+    display: block; /* Pastikan semua elemen di dalamnya menjadi blok */
+    margin: 0 auto; /* Pusatkan */
+  }
+
+  .history-table .cancellation-cell .btn {
+    width: 100%;
+    max-width: 200px; /* Batasi lebar tombol batalkan */
+  }
+}
+
+.desktop-hidden {
+  display: none;
+}
+
