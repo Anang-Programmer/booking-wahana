@@ -1,104 +1,115 @@
-Proyek Aplikasi Booking Tiket Wahana
-1. Pendahuluan
-Dokumen ini menjelaskan arsitektur dan logika dari aplikasi web "Booking Tiket Wahana", sebuah proyek purwarupa yang dibangun menggunakan Python dengan framework Flask. Aplikasi ini mensimulasikan sistem pemesanan tiket online untuk sebuah taman hiburan, lengkap dengan fitur-fitur canggih seperti autentikasi pengguna, manajemen wahana oleh admin, daftar tunggu (waiting list), dan fitur pembatalan aksi terakhir (undo).
+🎠 Ride On - Sistem Booking Wahana
+Ride On adalah aplikasi web lengkap yang dibangun menggunakan Flask untuk sistem manajemen pemesanan tiket wahana di sebuah taman hiburan. Aplikasi ini memungkinkan pengguna untuk melihat daftar wahana, memesan tiket berdasarkan jadwal, dan masuk ke dalam daftar tunggu jika tiket habis. Di sisi lain, admin memiliki dashboard khusus untuk mengelola data wahana, jadwal, pengguna, dan semua pemesanan.
 
-Tujuan utama proyek ini adalah untuk mendemonstrasikan implementasi berbagai struktur data fundamental dalam sebuah aplikasi web yang fungsional dan terhubung ke database.
+Proyek ini tidak hanya fokus pada fungsionalitas, tetapi juga merupakan implementasi nyata dari berbagai konsep fundamental struktur data dalam sebuah aplikasi web.
 
-Teknologi Utama:
+Lihat Aplikasi Live: cumlaude28.pythonanywhere.com
 
-Backend: Python, Flask
+✨ Fitur Utama
+👤 Untuk Pengguna
+Pencarian Wahana: Mencari wahana favorit dengan mudah.
 
-Database: MySQL (via XAMPP)
+Katalog Detail: Melihat deskripsi, lokasi, dan jadwal setiap wahana.
 
-ORM: Flask-SQLAlchemy
+Sistem Booking: Memesan tiket untuk jadwal yang tersedia.
 
-Keamanan: Passlib (untuk hashing password)
+Daftar Tunggu (Waiting List): Otomatis masuk antrian jika tiket pada jadwal pilihan sudah habis.
 
-Frontend: HTML, CSS, Jinja2 (Templating From Flask)
+Riwayat Pemesanan: Melihat dan mengelola riwayat semua tiket yang pernah dipesan.
 
-2. Struktur Proyek
-Proyek ini disusun dengan struktur folder yang rapi untuk memisahkan antara logika, tampilan, dan aset statis, sesuai dengan praktik terbaik pengembangan web.
+Pembatalan Terbatas: Pengguna dapat membatalkan pesanan dalam rentang waktu tertentu setelah booking.
 
-/booking_wahana_final
-|
-|-- app.py              # File utama Flask (otak aplikasi)
-|
-|-- /templates          # Folder untuk file-file HTML
-|   |-- layout.html         # Template dasar untuk semua halaman
-|   |-- index.html          # Halaman utama (daftar wahana)
-|   |-- wahana_detail.html  # Halaman detail wahana & booking
-|   |-- riwayat.html        # Halaman riwayat booking pengguna
-|   |-- daftar_tunggu.html  # Halaman daftar tunggu pengguna
-|   |-- auth.html           # Halaman untuk Login & Registrasi
-|   |-- /admin
-|       |-- layout.html
-|       |-- dashboard.html
-|       |-- kelola_wahana.html
-|       |-- form_wahana.html
-|
-|-- /static             # Folder untuk file CSS, JS, dan Gambar
-    |-- /css/style.css
-    |-- /images/ ...
+Cetak Tiket: Menampilkan detail tiket dengan kode booking unik.
 
-3. Alur Kerja & Logika Backend (app.py)
-File app.py adalah pusat dari seluruh aplikasi. Di sinilah semua logika bisnis, interaksi database, dan manajemen struktur data terjadi.
+🛠️ Untuk Admin
+Dashboard Admin: Ringkasan statistik total wahana, pengguna, dan pemesanan.
 
-3.1. Inisialisasi dan Koneksi Database
-Aplikasi dimulai dengan menginisialisasi Flask dan SQLAlchemy. Konfigurasi SQLALCHEMY_DATABASE_URI diatur untuk terhubung ke database MySQL yang berjalan di XAMPP.
+Manajemen Wahana (CRUD): Admin dapat menambah, melihat, mengedit, dan menghapus data wahana, termasuk mengunggah gambar.
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:@localhost/db_booking_wahana'
-db = SQLAlchemy(app)
+Manajemen Jadwal (CRUD): Mengelola jadwal untuk setiap wahana. Jika admin menambah kuota tiket, sistem akan otomatis memberikannya kepada pengguna di daftar tunggu.
 
-3.2. Implementasi Struktur Data
-Proyek ini secara aktif menggunakan beberapa struktur data fundamental:
+Manajemen Pengguna & Pesanan: Melihat daftar semua pengguna dan detail setiap pemesanan yang masuk.
 
-Record / Class / Struct (Database-backed):
+🔬 Implementasi Struktur Data
+Proyek ini secara sadar mengimplementasikan beberapa struktur data penting:
 
-Implementasi: Struktur data ini diimplementasikan menggunakan Model SQLAlchemy. Setiap class seperti Pengguna, Wahana, JadwalWahana, dll., berfungsi sebagai blueprint (sebuah Record atau Class) yang secara langsung memetakan atributnya ke kolom-kolom pada tabel di database MySQL. Ini adalah fondasi utama penyimpanan data permanen.
+Record / Class: Diimplementasikan melalui Model SQLAlchemy (Pengguna, Wahana, Pemesanan, dll.). Setiap objek dari kelas ini merepresentasikan sebuah record data yang terstruktur dan memetakan langsung ke tabel di database.
 
-Contoh: class Wahana(db.Model): ...
+Array: Diimplementasikan dalam bentuk List Python saat mengambil data dari database (contoh: Wahana.query.all()). Hasil query ini adalah sebuah array dinamis yang berisi kumpulan record wahana.
 
-Array (Database-backed):
+Queue (Antrian): Diimplementasikan pada fitur Daftar Tunggu (Waiting List). Saat tiket habis, pengguna akan ditambahkan ke antrian. Ketika tiket kembali tersedia, pengguna yang pertama masuk (First-In) akan menjadi yang pertama diproses (First-Out).
 
-Implementasi: Struktur data ini diwujudkan melalui query SQLAlchemy yang mengembalikan sebuah Python List. List berfungsi sebagai Array dinamis.
+Stack (Tumpukan): Diimplementasikan secara konseptual pada sistem undo booking. Setiap booking baru akan di-push ke dalam sebuah stack di session. Fitur pembatalan yang lebih lanjut akan melakukan pop pada data terakhir yang masuk (Last-In, First-Out).
 
-Contoh: Wahana.query.all() akan mengambil semua baris dari tabel wahana dan mengembalikannya sebagai sebuah List (Array) yang berisi objek-objek Wahana.
+🚀 Cara Menjalankan Secara Lokal
+Untuk menjalankan proyek ini di komputer Anda, ikuti langkah-langkah berikut:
 
-Queue / Antrian (Database-backed):
+1. Prasyarat
 
-Implementasi: Fitur Waiting List diimplementasikan sebagai sebuah antrian (Queue) yang persisten menggunakan tabel waiting_list di database. Sifat "First-In, First-Out" (FIFO) dari antrian dicapai dengan mengurutkan data berdasarkan waktu_masuk.
+Pastikan Anda sudah menginstal Python 3.x dan Git.
 
-Contoh: Saat tiket habis, sebuah data baru ditambahkan ke tabel waiting_list (proses enqueue). Saat tiket kembali tersedia (karena ada yang membatalkan), data yang paling lama (.order_by(WaitingList.waktu_masuk).first()) akan diambil dan dihapus (proses dequeue).
+Memiliki server database MySQL yang sedang berjalan.
 
-Stack / Tumpukan (Session-based):
+2. Clone Repository
 
-Implementasi: Fitur "Undo Booking" menggunakan Python List yang disimpan di dalam session sebagai sebuah Stack.
+git clone https://github.com/Anang-Programmer/booking-wahana.git
+cd booking-wahana
 
-Contoh: Setiap kali booking berhasil, ID pemesanan yang baru dibuat akan di-push (dengan .append()) ke puncak stack session['undo_stack']. Saat pengguna menekan tombol "Undo", data terakhir akan di-pop (dengan .pop()) dari stack untuk diproses pembatalannya. Penggunaan session memastikan bahwa stack ini bersifat sementara dan unik untuk setiap pengguna.
+3. Buat dan Aktifkan Virtual Environment
 
-3.3. Logika Rute (Routing)
-Aplikasi memiliki beberapa grup rute utama:
+# Membuat venv
+python -m venv venv
 
-Rute Publik (/, /wahana/<id>): Dapat diakses oleh siapa saja untuk melihat daftar dan detail wahana.
+# Mengaktifkan venv
+# Windows
+venv\Scripts\activate
+# MacOS / Linux
+source venv/bin/activate
 
-Rute Autentikasi (/auth, /logout): Mengelola proses registrasi dan login. Saat login berhasil, informasi penting seperti user_id dan user_role disimpan ke dalam session.
+4. Install Semua Library yang Dibutuhkan
 
-Rute Pengguna Terdaftar (/booking, /riwayat, dll.): Memerlukan pengguna untuk login. Proses booking akan memvalidasi sisa tiket dan memutuskan apakah akan memproses pemesanan atau memasukkan pengguna ke Queue.
+pip install -r requirements.txt
 
-Rute Admin (/admin/...): Dilindungi oleh decorator @admin_required yang memeriksa apakah session['user_role'] adalah 'admin'. Jika tidak, pengguna akan dialihkan. Rute ini mengelola operasi CRUD (Create, Read, Update, Delete) untuk data wahana dan jadwalnya.
+5. Setup Database
 
-4. Cara Menjalankan Proyek
-Prasyarat: Pastikan Anda telah menginstal Python, XAMPP (dengan Apache & MySQL berjalan), dan library yang dibutuhkan (pip install Flask Flask-SQLAlchemy mysql-connector-python passlib).
+Buat sebuah database baru di MySQL Anda (misalnya, bernama db_booking_wahana).
 
-Database: Buka phpMyAdmin dan jalankan skrip SQL yang tersedia untuk membuat database db_booking_wahana beserta semua tabelnya.
+Impor file db_booking_wahana.sql yang ada di repository ke dalam database yang baru saja Anda buat.
 
-Struktur Folder: Pastikan semua file (app.py, HTML, CSS, images) berada di dalam struktur folder yang benar.
+6. Konfigurasi Koneksi Database
 
-Jalankan Server: Buka terminal, navigasi ke folder proyek (/booking_wahana_final), dan jalankan perintah:
+Buka file app.py.
 
-python app.py
+Cari baris berikut dan sesuaikan dengan konfigurasi database lokal Anda:
 
-Akses Aplikasi: Buka browser web dan kunjungi http://127.0.0.1:5000/.
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://USERNAME:PASSWORD@localhost/NAMA_DATABASE'
 
-Saat pertama kali dijalankan, skrip akan secara otomatis membuat akun admin default (admin@wahana.com dengan password admin123) dan mengisi database dengan data wahana awal jika database tersebut kosong.
+7. Jalankan Aplikasi
+
+flask run
+
+Aplikasi sekarang akan berjalan di http://127.0.0.1:5000.
+
+💻 Teknologi yang Digunakan
+Backend: Python, Flask, Flask-SQLAlchemy
+
+Database: MySQL
+
+Frontend: HTML, CSS, JavaScript
+
+Deployment: PythonAnywhere
+
+Lainnya: Jinja2 (Template Engine), Passlib (Password Hashing)
+
+✍️ Authors
+Dibuat dengan ❤️ oleh Kelompok 1 Struktur Data:
+
+Jaka Perdana
+
+Firda Nabilah
+
+Hasanah Nur Aini
+
+Anggina Pertiwi Nasution
+
+Azri Anggia Putri
