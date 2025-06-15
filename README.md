@@ -77,7 +77,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://USERNAME:PASSWOR
 
 ### 7. Jalankan Aplikasi
 ```bash
-flask run
+py app.py
 ```
 
 Akses di: `http://127.0.0.1:5000`
